@@ -1,4 +1,4 @@
-package com.sopp.payment.entity
+package com.sopp.Payment.entity
 
 import jakarta.persistence.*
 import java.util.*
@@ -7,9 +7,10 @@ import java.util.*
 @Table(name = "payment-requests")
 data class PaymentRequestEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long=0,
+    val id: UUID=UUID.randomUUID(),
     var merchantId: UUID,
     var paymentAmount: Long,
     var paymentMessage: String
-)
+){
+    constructor() : this(UUID.randomUUID(), UUID.randomUUID(), 0L, "")
+}
