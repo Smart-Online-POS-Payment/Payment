@@ -15,4 +15,16 @@ class PaymentRequestService(
         val paymentRequestEntity=paymentRequestRepository.save(paymentRequestEntity)
         return paymentRequestEntity.id
     }
+
+    suspend fun cancelPaymentRequest(uuid: UUID){
+        paymentRequestRepository.deleteById(uuid)
+    }
+
+    suspend fun cancelPaymentRequests(){
+        paymentRequestRepository.deleteAll()
+    }
+
+    suspend fun getPaymentRequestDetail(uuid:UUID): PaymentRequestEntity {
+        return paymentRequestRepository.findById(uuid).get()
+    }
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.util.*
 
 @Entity
-@Table(name = "payment-requests")
+@Table(name = "payment_requests")
 data class PaymentRequestEntity(
     @Id
     val id: UUID=UUID.randomUUID(),

@@ -14,22 +14,21 @@ class PaymentRequestController(
 
     @PostMapping
     suspend fun createPaymentRequest(@RequestBody paymentRequestEntity: PaymentRequestEntity): UUID {
-        print(paymentRequestEntity)
         return paymentRequestService.createPaymentRequest(paymentRequestEntity)
     }
 
     @DeleteMapping("{uuid}/cancel")
     suspend fun cancelPaymentRequest(@PathVariable uuid: UUID){
-
+        paymentRequestService.cancelPaymentRequest(uuid)
     }
 
     @DeleteMapping("cancel")
     suspend fun cancelPaymentRequests(){
-
+        paymentRequestService.cancelPaymentRequests()
     }
 
     @GetMapping("{uuid}")
-    suspend fun getPaymentRequestDetail(@PathVariable uuid: UUID){
-
+    suspend fun getPaymentRequestDetail(@PathVariable uuid: UUID): PaymentRequestEntity {
+        return paymentRequestService.getPaymentRequestDetail(uuid)
     }
 }
