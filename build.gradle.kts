@@ -17,6 +17,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven("https://repo.spring.io/milestone")
 }
 
 dependencies {
@@ -26,7 +27,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 	// Security
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
 	//kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -36,6 +36,11 @@ dependencies {
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
+
+	//database
+	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
 }
 
 tasks.withType<KotlinCompile> {

@@ -1,0 +1,20 @@
+spring:
+  application.name: Payment
+  datasource:
+    url: jdbc:postgresql://${database.endpoint}/${database.name}
+    username: ${database.user}
+    password: ${database.password}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+database:
+  endpoint: localhost:5432
+  name: sopp
+  user: db_user
+  password: db_pass
+server:
+  port: 8083

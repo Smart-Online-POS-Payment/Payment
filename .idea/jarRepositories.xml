@@ -26,5 +26,10 @@
       <option name="name" value="AWS_S3_REPO" />
       <option name="url" value="s3://repo.valensas.com/m2/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="https://repo.spring.io/milestone" />
+    </remote-repository>
   </component>
 </project>

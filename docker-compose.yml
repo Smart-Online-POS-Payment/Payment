@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  payment:
+    container_name: Payment
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      DATABASE_URL: jdbc:postgres://db_user:db_pass@postgres:5432/sopp
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:15.3
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_pass
+      POSTGRES_DB: sopp
+    ports:
+      - '5432:5432'
