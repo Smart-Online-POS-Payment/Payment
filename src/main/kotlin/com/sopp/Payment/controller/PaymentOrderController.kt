@@ -2,15 +2,12 @@ package com.sopp.Payment.controller
 
 import com.sopp.Payment.entity.PaymentOrderEntity
 import com.sopp.Payment.service.PaymentOrderService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
 @RequestMapping("payment/payment-order")
+@CrossOrigin(origins = ["http://localhost:3000"])
 class PaymentOrderController(
     private val paymentOrderService: PaymentOrderService
 ) {
