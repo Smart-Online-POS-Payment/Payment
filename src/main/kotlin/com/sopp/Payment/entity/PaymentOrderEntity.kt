@@ -1,8 +1,7 @@
 package com.sopp.Payment.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
+import org.hibernate.annotations.CreationTimestamp
 import java.util.*
 
 @Entity
@@ -13,7 +12,10 @@ data class PaymentOrderEntity(
     var merchantId: UUID,
     var customerId: UUID,
     var paymentAmount: Long,
-    var paymentMessage: String
+    var paymentMessage: String,
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    var paymentDate: Date?
 ){
-    constructor(): this(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), 0L, "")
+    constructor(): this(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), 0L, "", Date())
 }
