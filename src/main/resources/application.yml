@@ -18,3 +18,6 @@ database:
   password: db_pass
 server:
   port: 8083
+firebase:
+  credentials:
+    path: serviceAccountKey.json
