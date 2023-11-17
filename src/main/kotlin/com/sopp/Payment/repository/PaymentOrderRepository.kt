@@ -8,7 +8,7 @@ import java.util.UUID
 
 @Repository
 interface PaymentOrderRepository: CrudRepository<PaymentOrderEntity, UUID> {
-    fun findByCustomerId(customerId: UUID): List<PaymentOrderEntity>
+    fun findByCustomerId(customerId: String): List<PaymentOrderEntity>
 
-    fun findByMerchantId(merchantId: UUID): List<PaymentOrderEntity>
+    fun findByMerchantId(merchantId: String): List<PaymentOrderEntity>
 }

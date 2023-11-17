@@ -8,9 +8,9 @@ import java.util.*
 data class PaymentRequestEntity(
     @Id
     val id: UUID=UUID.randomUUID(),
-    var merchantId: UUID,
+    var merchantId: String,
     var paymentAmount: Long,
     var paymentMessage: String
 ){
-    constructor() : this(UUID.randomUUID(), UUID.randomUUID(), 0L, "")
+    constructor() : this(UUID.randomUUID(), UUID.randomUUID().toString(), 0L, "")
 }

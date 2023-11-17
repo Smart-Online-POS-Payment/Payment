@@ -9,13 +9,13 @@ import java.util.*
 data class PaymentOrderEntity(
     @Id
     val id: UUID = UUID.randomUUID(),
-    var merchantId: UUID,
-    var customerId: UUID,
+    var merchantId: String,
+    var customerId: String,
     var paymentAmount: Long,
     var paymentMessage: String,
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     var paymentDate: Date?
 ){
-    constructor(): this(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), 0L, "", Date())
+    constructor(): this(UUID.randomUUID(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), 0L, "", Date())
 }

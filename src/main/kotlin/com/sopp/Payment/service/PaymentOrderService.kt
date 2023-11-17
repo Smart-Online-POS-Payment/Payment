@@ -11,17 +11,17 @@ class PaymentOrderService(
     private val paymentOrderRepository: PaymentOrderRepository,
     private val paymentRequestRepository: PaymentRequestRepository
 ) {
-    suspend fun createPaymentOrder(uuid: UUID, customerId: UUID): Boolean {
+    suspend fun createPaymentOrder(uuid: UUID, customerId: String): Boolean {
         val paymentRequest = paymentRequestRepository.findById(uuid).get()
         val paymentOrderEntity:PaymentOrderEntity = paymentOrderRepository.save(PaymentOrderEntity(merchantId = paymentRequest.merchantId, customerId = customerId, paymentAmount = paymentRequest.paymentAmount, paymentMessage = paymentRequest.paymentMessage, paymentDate = null))
         return paymentOrderEntity!=null
     }
 
-    suspend fun getPaymentsOfUser(customerId: UUID): List<PaymentOrderEntity> {
+    suspend fun getPaymentsOfUser(customerId: String): List<PaymentOrderEntity> {
         return paymentOrderRepository.findByCustomerId(customerId)
     }
 
-    suspend fun getPaymentsOfMerchant(merchantId: UUID): List<PaymentOrderEntity> {
+    suspend fun getPaymentsOfMerchant(merchantId: String): List<PaymentOrderEntity> {
         return paymentOrderRepository.findByMerchantId(merchantId)
     }
 

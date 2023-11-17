@@ -17,8 +17,8 @@ class PaymentOrderController(
 ) {
 
     @PostMapping("/{uuid}/customer/{customerId}")
-    suspend fun createPaymentOrder(@RequestHeader("Authorization") authorizationHeader: String, @PathVariable uuid: UUID, @PathVariable customerId: UUID): Boolean {
-        val isValid = firebaseService.validateUserToken(authorizationHeader, uuid.toString())
+    suspend fun createPaymentOrder(@RequestHeader("Authorization") authorizationHeader: String, @PathVariable uuid: UUID, @PathVariable customerId: String): Boolean {
+        val isValid = firebaseService.validateUserToken(authorizationHeader, customerId)
 
         if (isValid){
             return paymentOrderService.createPaymentOrder(uuid, customerId)
@@ -28,12 +28,21 @@ class PaymentOrderController(
     }
 
     @GetMapping("/customer/{customerId}")
-    suspend fun getPaymentsOfUser(@PathVariable customerId: UUID): List<PaymentOrderEntity> {
-        return paymentOrderService.getPaymentsOfUser(customerId)
+    suspend fun getPaymentsOfUser(@RequestHeader("Authorization") authorizationHeader: String, @PathVariable customerId: String): List<PaymentOrderEntity> {
+        val isValid = firebaseService.validateUserToken(authorizationHeader, customerId)
+        if (isValid){
+            return paymentOrderService.getPaymentsOfUser(customerId)
+        }
+        return emptyList()
     }
 
     @GetMapping("/merchant/{merchantId}")
-    suspend fun getPaymentsOfMerchant(@PathVariable merchantId: UUID): List<PaymentOrderEntity> {
-        return paymentOrderService.getPaymentsOfMerchant(merchantId)
+    suspend fun getPaymentsOfMerchant(@RequestHeader("Authorization") authorizationHeader: String, @PathVariable merchantId: String): List<PaymentOrderEntity> {
+        val isValid = firebaseService.validateUserToken(authorizationHeader, merchantId)
+
+        if (isValid){
+            return paymentOrderService.getPaymentsOfMerchant(merchantId)
+        }
+        return emptyList()
     }
 }
