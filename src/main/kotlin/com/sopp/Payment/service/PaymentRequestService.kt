@@ -8,7 +8,8 @@ import java.util.*
 
 @Service
 class PaymentRequestService(
-    private val paymentRequestRepository: PaymentRequestRepository
+    private val paymentRequestRepository: PaymentRequestRepository,
+    private val walletService: WalletService
 ) {
 
     suspend fun createPaymentRequest(@RequestBody paymentRequestEntity: PaymentRequestEntity): UUID {

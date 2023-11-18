@@ -7,7 +7,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -18,3 +18,10 @@ database:
   password: db_pass
 server:
   port: 8083
+firebase:
+  credentials:
+    path: serviceAccountKey.json
+sopp:
+  server:
+    wallet:
+      url: http://localhost:8082

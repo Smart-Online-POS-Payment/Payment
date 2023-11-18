@@ -27,12 +27,19 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 	// Security
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	//implementation ("org.springframework.security:spring-security-web:5.7.8")
+	//implementation("org.springframework.boot:spring-boot-starter-security")
+
+
 
 	//kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+	implementation("com.google.firebase:firebase-admin:9.1.1")
+
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
@@ -41,6 +48,7 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
+	//compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 }
 
 tasks.withType<KotlinCompile> {
