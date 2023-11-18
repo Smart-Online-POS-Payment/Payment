@@ -1,6 +1,7 @@
 package com.sopp.Payment.entity
 
 import jakarta.persistence.*
+import java.math.BigDecimal
 import java.util.*
 
 @Entity
@@ -9,8 +10,8 @@ data class PaymentRequestEntity(
     @Id
     val id: UUID=UUID.randomUUID(),
     var merchantId: String,
-    var paymentAmount: Long,
+    var paymentAmount: BigDecimal,
     var paymentMessage: String
 ){
-    constructor() : this(UUID.randomUUID(), UUID.randomUUID().toString(), 0L, "")
+    constructor() : this(UUID.randomUUID(), UUID.randomUUID().toString(), BigDecimal.ONE, "")
 }

@@ -21,3 +21,7 @@ server:
 firebase:
   credentials:
     path: serviceAccountKey.json
+sopp:
+  server:
+    wallet:
+      url: http://localhost:8082

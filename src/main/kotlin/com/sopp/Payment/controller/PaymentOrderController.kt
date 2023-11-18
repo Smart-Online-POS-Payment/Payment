@@ -2,6 +2,7 @@ package com.sopp.Payment.controller
 
 
 import com.sopp.Payment.entity.PaymentOrderEntity
+import com.sopp.Payment.model.ResponseModel
 import com.sopp.Payment.service.FirebaseService
 import com.sopp.Payment.service.PaymentOrderService
 import org.springframework.web.bind.annotation.*
@@ -17,14 +18,14 @@ class PaymentOrderController(
 ) {
 
     @PostMapping("/{uuid}/customer/{customerId}")
-    suspend fun createPaymentOrder(@RequestHeader("Authorization") authorizationHeader: String, @PathVariable uuid: UUID, @PathVariable customerId: String): Boolean {
+    suspend fun createPaymentOrder(@RequestHeader("Authorization") authorizationHeader: String, @PathVariable uuid: UUID, @PathVariable customerId: String): ResponseModel {
         val isValid = firebaseService.validateUserToken(authorizationHeader, customerId)
 
         if (isValid){
             return paymentOrderService.createPaymentOrder(uuid, customerId)
         }
 
-        return false
+        return ResponseModel("400","Firebase token authentication failed")
     }
 
     @GetMapping("/customer/{customerId}")
