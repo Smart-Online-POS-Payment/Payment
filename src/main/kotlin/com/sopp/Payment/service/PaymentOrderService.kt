@@ -1,7 +1,9 @@
 package com.sopp.Payment.service
 
 import com.sopp.Payment.entity.PaymentOrderEntity
+import com.sopp.Payment.model.PaymentModel
 import com.sopp.Payment.model.ResponseModel
+import com.sopp.Payment.model.TransactionType
 import com.sopp.Payment.repository.PaymentOrderRepository
 import com.sopp.Payment.repository.PaymentRequestRepository
 import org.springframework.stereotype.Service
@@ -20,14 +22,16 @@ class PaymentOrderService(
         val paymentRequest = paymentRequestRepository.findById(uuid).get()
         val withdrawResponse = walletService.withdrawMoney(customerId, paymentRequest.paymentAmount)
         if(withdrawResponse.statusCode!="200"){
+            walletService.addMoney(paymentRequest.merchantId, paymentRequest.paymentAmount)// ToDo: Retry until successfull
             return withdrawResponse
         }
         paymentOrderRepository.save(PaymentOrderEntity(id= paymentRequest.id, merchantId = paymentRequest.merchantId, customerId = customerId, paymentAmount = paymentRequest.paymentAmount, paymentMessage = paymentRequest.paymentMessage, paymentDate = null))
         return ResponseModel("200", "Successfull payment")
     }
 
-    suspend fun getPaymentsOfUser(customerId: String): List<PaymentOrderEntity> {
-        return paymentOrderRepository.findByCustomerId(customerId)
+    suspend fun getPaymentsOfUser(customerId: String): List<PaymentModel> {
+        val  paymentOrderEntities = paymentOrderRepository.findByCustomerId(customerId)
+        return paymentOrderEntities.map { PaymentModel(it) }
     }
 
     suspend fun getPaymentsOfMerchant(merchantId: String): List<PaymentOrderEntity> {

@@ -15,8 +15,8 @@ class PaymentRequestController(
 ) {
 
     @PostMapping
-    suspend fun createPaymentRequest(@RequestHeader("Authorization") authorizationHeader: String, @RequestBody paymentRequestEntity: PaymentRequestEntity): UUID? {
-        val isValid = firebaseService.validateUserToken(authorizationHeader, paymentRequestEntity.merchantId)
+    suspend fun createPaymentRequest(@RequestBody paymentRequestEntity: PaymentRequestEntity): UUID? {
+        val isValid = true
         if (isValid){
             return paymentRequestService.createPaymentRequest(paymentRequestEntity)
         }
@@ -45,5 +45,10 @@ class PaymentRequestController(
         if (isValid)
             return paymentRequestService.getPaymentRequestDetail(uuid)
         return null
+    }
+
+    @PostMapping("/refund/{uuid}")
+    suspend fun createRefundRequest(@PathVariable uuid: UUID){
+
     }
 }

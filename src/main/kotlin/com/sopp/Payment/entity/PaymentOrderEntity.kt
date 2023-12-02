@@ -1,5 +1,6 @@
 package com.sopp.Payment.entity
 
+import com.sopp.Payment.model.TransactionType
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import java.math.BigDecimal
