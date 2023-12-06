@@ -28,9 +28,6 @@ dependencies {
 
 	// Security
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-	//implementation ("org.springframework.security:spring-security-web:5.7.8")
-	//implementation("org.springframework.boot:spring-boot-starter-security")
-
 
 
 	//kotlin
@@ -47,6 +44,10 @@ dependencies {
 	//database
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+	//kafka
+	implementation ("org.springframework.boot:spring-boot-starter")
+	implementation ("org.springframework.kafka:spring-kafka")
 
 	//compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 }

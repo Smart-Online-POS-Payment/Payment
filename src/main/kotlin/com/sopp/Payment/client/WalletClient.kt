@@ -23,7 +23,7 @@ class WalletClient(
     suspend fun addMoney(merchantId: String, amount: BigDecimal): ResponseModel{
         return client
             .put()
-            .uri("wallet/{merchantId}/amount/{amount}", merchantId, amount)
+            .uri("wallet/$merchantId/amount/$amount")
             .retrieve()
             .awaitBody()
     }

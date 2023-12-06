@@ -15,34 +15,20 @@ import java.util.*
 @CrossOrigin(origins = ["http://localhost:3000"])
 class PaymentOrderController(
     private val paymentOrderService: PaymentOrderService,
-    private val firebaseService: FirebaseService
 ) {
 
     @PostMapping("/{uuid}/customer/{customerId}")
     suspend fun createPaymentOrder(@PathVariable uuid: UUID, @PathVariable customerId: String): ResponseModel {
-        val isValid = true
-        if (isValid){
-            return paymentOrderService.createPaymentOrder(uuid, customerId)
-        }
-
-        return ResponseModel("400","Firebase token authentication failed")
+        return paymentOrderService.createPaymentOrder(uuid, customerId)
     }
 
     @GetMapping("/customer/{customerId}")
-    suspend fun getPaymentsOfUser(@RequestHeader("Authorization") authorizationHeader: String, @PathVariable customerId: String): List<PaymentModel> {
-        val isValid = firebaseService.validateUserToken(authorizationHeader, customerId)
-        if (isValid){
-            return paymentOrderService.getPaymentsOfUser(customerId)
-        }
-        return emptyList()
+    suspend fun getPaymentsOfUser( @PathVariable customerId: String): List<PaymentModel> {
+        return paymentOrderService.getPaymentsOfUser(customerId)
     }
 
     @GetMapping("/merchant/{merchantId}")
-    suspend fun getPaymentsOfMerchant(@RequestHeader("Authorization") authorizationHeader: String, @PathVariable merchantId: String): List<PaymentOrderEntity> {
-        val isValid = firebaseService.validateUserToken(authorizationHeader, merchantId)
-        if (isValid){
-            return paymentOrderService.getPaymentsOfMerchant(merchantId)
-        }
-        return emptyList()
+    suspend fun getPaymentsOfMerchant(@PathVariable merchantId: String): List<PaymentOrderEntity> {
+        return paymentOrderService.getPaymentsOfMerchant(merchantId)
     }
 }

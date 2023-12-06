@@ -1,5 +1,6 @@
 package com.sopp.Payment.service
 
+import com.sopp.Payment.config.producer.KafkaProducer
 import com.sopp.Payment.entity.PaymentOrderEntity
 import com.sopp.Payment.model.PaymentModel
 import com.sopp.Payment.model.ResponseModel
@@ -13,7 +14,8 @@ import java.util.UUID
 class PaymentOrderService(
     private val paymentOrderRepository: PaymentOrderRepository,
     private val paymentRequestRepository: PaymentRequestRepository,
-    private val walletService: WalletService
+    private val walletService: WalletService,
+    private val kafkaProducer: KafkaProducer
 ) {
     suspend fun createPaymentOrder(uuid: UUID, customerId: String): ResponseModel {
         if (paymentOrderRepository.existsById(uuid)){
@@ -21,12 +23,17 @@ class PaymentOrderService(
         }
         val paymentRequest = paymentRequestRepository.findById(uuid).get()
         val withdrawResponse = walletService.withdrawMoney(customerId, paymentRequest.paymentAmount)
-        if(withdrawResponse.statusCode!="200"){
+        print(withdrawResponse)
+        if(withdrawResponse.statusCode=="200"){
             walletService.addMoney(paymentRequest.merchantId, paymentRequest.paymentAmount)// ToDo: Retry until successfull
+            val paymentOrder = paymentOrderRepository.save(PaymentOrderEntity(id = paymentRequest.id, merchantId = paymentRequest.merchantId, customerId = customerId, paymentAmount = paymentRequest.paymentAmount, paymentMessage = paymentRequest.paymentMessage, paymentDate = null))
+            kafkaProducer.sendStringMessage(paymentOrder)
+            return ResponseModel("200", "Successfull payment")
             return withdrawResponse
         }
-        paymentOrderRepository.save(PaymentOrderEntity(id= paymentRequest.id, merchantId = paymentRequest.merchantId, customerId = customerId, paymentAmount = paymentRequest.paymentAmount, paymentMessage = paymentRequest.paymentMessage, paymentDate = null))
-        return ResponseModel("200", "Successfull payment")
+        else{
+            return ResponseModel("500", "Internal error")
+        }
     }
 
     suspend fun getPaymentsOfUser(customerId: String): List<PaymentModel> {

@@ -18,7 +18,7 @@ class RefundController(
     }
 
     @PutMapping("/{orderId}")
-    fun completeRefund(@PathVariable orderId: UUID){
+    suspend fun completeRefund(@PathVariable orderId: UUID){
         refundService.completeRefund(orderId)
     }
 
