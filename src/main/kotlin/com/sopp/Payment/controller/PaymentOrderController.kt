@@ -1,10 +1,9 @@
 package com.sopp.Payment.controller
 
 
-import com.sopp.Payment.entity.PaymentOrderEntity
+import com.sopp.Payment.entity.PaymentTransactionEntity
 import com.sopp.Payment.model.PaymentModel
 import com.sopp.Payment.model.ResponseModel
-import com.sopp.Payment.service.FirebaseService
 import com.sopp.Payment.service.PaymentOrderService
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -28,7 +27,7 @@ class PaymentOrderController(
     }
 
     @GetMapping("/merchant/{merchantId}")
-    suspend fun getPaymentsOfMerchant(@PathVariable merchantId: String): List<PaymentOrderEntity> {
+    suspend fun getPaymentsOfMerchant(@PathVariable merchantId: String): List<PaymentTransactionEntity> {
         return paymentOrderService.getPaymentsOfMerchant(merchantId)
     }
 }

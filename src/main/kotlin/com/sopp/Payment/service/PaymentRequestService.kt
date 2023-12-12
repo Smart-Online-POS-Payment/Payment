@@ -1,29 +1,30 @@
 package com.sopp.Payment.service
 
-import com.sopp.Payment.entity.PaymentRequestEntity
-import com.sopp.Payment.repository.PaymentOrderRepository
-import com.sopp.Payment.repository.PaymentRequestRepository
+import com.sopp.Payment.entity.PaymentTransactionEntity
+import com.sopp.Payment.model.PaymentTransactionModel
+import com.sopp.Payment.repository.PaymentTransactionRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class PaymentRequestService(
-    private val paymentRequestRepository: PaymentRequestRepository) {
+    private var paymentTransactionRepository: PaymentTransactionRepository
+    ) {
 
-    suspend fun createPaymentRequest(paymentRequestEntity: PaymentRequestEntity): UUID {
-        val paymentRequestEntity=paymentRequestRepository.save(paymentRequestEntity)
-        return paymentRequestEntity.id
+    suspend fun createPaymentRequest(paymentTransactionModel: PaymentTransactionModel): UUID {
+        var paymentTransactionEntity = PaymentTransactionEntity(paymentTransactionModel)
+        return paymentTransactionRepository.save(paymentTransactionEntity).id
     }
 
     suspend fun cancelPaymentRequest(uuid: UUID){
-        paymentRequestRepository.deleteById(uuid)
+        paymentTransactionRepository.deleteById(uuid)
     }
 
     suspend fun cancelPaymentRequests(){
-        paymentRequestRepository.deleteAll()
+        paymentTransactionRepository.deleteAll()
     }
 
-    suspend fun getPaymentRequestDetail(uuid:UUID): PaymentRequestEntity {
-        return paymentRequestRepository.findById(uuid).get()
+    suspend fun getPaymentRequestDetail(uuid:UUID): PaymentTransactionEntity {
+        return paymentTransactionRepository.findById(uuid).get()
     }
 }

@@ -1,7 +1,7 @@
 package com.sopp.Payment.controller
 
-import com.sopp.Payment.entity.PaymentRequestEntity
-import com.sopp.Payment.service.FirebaseService
+import com.sopp.Payment.entity.PaymentTransactionEntity
+import com.sopp.Payment.model.PaymentTransactionModel
 import com.sopp.Payment.service.PaymentRequestService
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -14,8 +14,8 @@ class PaymentRequestController(
 ) {
 
     @PostMapping
-    suspend fun createPaymentRequest(@RequestBody paymentRequestEntity: PaymentRequestEntity): UUID? {
-        return paymentRequestService.createPaymentRequest(paymentRequestEntity)
+    suspend fun createPaymentRequest(@RequestBody paymentTransactionModel: PaymentTransactionModel): UUID? {
+        return paymentRequestService.createPaymentRequest(paymentTransactionModel)
     }
 
     @DeleteMapping("{merchantId}/cancel/{uuid}")
@@ -29,7 +29,7 @@ class PaymentRequestController(
     }
 
     @GetMapping("{uuid}/customer/{customerId}")
-    suspend fun getPaymentRequestDetail(@PathVariable uuid: UUID, @PathVariable customerId: String): PaymentRequestEntity? {
+    suspend fun getPaymentRequestDetail(@PathVariable uuid: UUID, @PathVariable customerId: String): PaymentTransactionEntity {
         return paymentRequestService.getPaymentRequestDetail(uuid)
     }
 }

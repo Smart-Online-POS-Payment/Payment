@@ -1,8 +1,9 @@
 package com.sopp.Payment.service
 
-import com.sopp.Payment.entity.RefundEntity
-import com.sopp.Payment.repository.PaymentOrderRepository
-import com.sopp.Payment.repository.RefundRepository
+import com.sopp.Payment.entity.PaymentTransactionEntity
+import com.sopp.Payment.model.PaymentTransactionModel.Type
+import com.sopp.Payment.model.ResponseModel
+import com.sopp.Payment.repository.PaymentTransactionRepository
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -10,50 +11,86 @@ import java.util.UUID
 
 @Service
 class RefundService(
-    private val refundRepository: RefundRepository,
-    private val orderRepository: PaymentOrderRepository,
+
+    private val paymentTransactionRepository: PaymentTransactionRepository,
     private val walletService: WalletService
 ) {
 
-    fun createRefund(orderId: UUID){
-        val order = orderRepository.findById(orderId)
-        if (order.isPresent){
-            val orderEntity = order.get()
-            if(refundRepository.findByOrderId(orderId).isPresent) throw ResponseStatusException(HttpStatus.CONFLICT, "There is a refund request for this payment order. You can not create new one.")
-            refundRepository.save(RefundEntity(orderId=orderId, customerId = orderEntity.customerId, merchantId = orderEntity.merchantId ,completed = false))
+    fun createRefund(orderId: UUID): ResponseModel {
+        val payment = paymentTransactionRepository.findById(orderId)
+        if (payment.isPresent){
+            val paymentEntity = payment.get()
+            when(paymentEntity.type){
+                Type.FinalizeSale->{
+                    if(paymentTransactionRepository.findByReference(orderId).isPresent) throw ResponseStatusException(HttpStatus.CONFLICT, "There is a refund request for this payment order. You can not create new one.")
+                    paymentTransactionRepository.save(PaymentTransactionEntity(paymentEntity, orderId))
+                    return ResponseModel("200", "Refund request is created")
+                }
+                Type.RequestSale -> {
+                    return ResponseModel("400", "This payment is not finalized yet")
+                }
+
+                Type.RequestRefund -> {
+                    return ResponseModel("400", "There is already a refund request for this payment")
+                }
+
+                Type.FinalizeRefund -> {
+                    return ResponseModel("400", "This payment is already refunded")
+                }
+            }
         }
         else throw ResponseStatusException(HttpStatus.NOT_FOUND, "Payment order not found")
     }
 
-    suspend fun completeRefund(orderId: UUID){
-        val refund = refundRepository.findByOrderId(orderId)
-        if (refund.isPresent){
-            val refundEntity =  refund.get()
-            if(!refundEntity.completed){
-                val orderEntity = orderRepository.findById(orderId).get()
-                try {
-                    walletService.addMoney(orderEntity.customerId, orderEntity.paymentAmount)
-                    walletService.withdrawMoney(orderEntity.merchantId, orderEntity.paymentAmount)
-                    refundEntity.completed=true
-                    refundRepository.save(refundEntity)
-                }catch (e: Exception){
-                    throw e
+    suspend fun completeRefund(id: UUID): ResponseModel {
+        val payment = paymentTransactionRepository.findById(id)
+
+        if (payment.isPresent){
+            val paymentEntity = payment.get()
+            when(paymentEntity.type){
+                Type.FinalizeSale->{
+                    return ResponseModel("400", "There is no refund request for this payment")
+                }
+                Type.RequestSale -> {
+                    return ResponseModel("400", "This payment is not finalized yet")
+                }
+
+                Type.RequestRefund -> {
+                    try {
+                        walletService.addMoney(paymentEntity.customerId!!, paymentEntity.paymentAmount)
+                        walletService.withdrawMoney(paymentEntity.merchantId, paymentEntity.paymentAmount)
+                        paymentTransactionRepository.deleteById(paymentEntity.reference!!)
+                        paymentEntity.type = Type.FinalizeRefund
+                        paymentEntity.reference=null
+                        paymentTransactionRepository.save(paymentEntity)
+                        return ResponseModel("200", "Refund is finalized.")
+                    }catch (e: Exception){
+                        throw e
+                    }
+                }
+
+                Type.FinalizeRefund -> {
+                    return ResponseModel("400", "This payment is already refunded")
                 }
             }
-            else throw ResponseStatusException(
-                HttpStatus.CONFLICT, "This refund is already processed"
-            )
-        }
-        else throw ResponseStatusException(
+        }else throw ResponseStatusException(
             HttpStatus.NOT_FOUND, "Refund order not found"
         );
     }
 
-    fun getRefundsOfCustomer(customerId: String): List<RefundEntity> {
-        return refundRepository.findByCustomerId(customerId)
+    fun getCustomerRefundRequests(customerId: String): List<PaymentTransactionEntity> {
+        return paymentTransactionRepository.findByCustomerId(customerId).filter { it.type == Type.RequestRefund }
     }
 
-    fun getRefundsOfMerchant(merchantId: String): List<RefundEntity> {
-        return refundRepository.findByMerchantId(merchantId)
+    fun getMerchantRefundRequests(merchantId: String): List<PaymentTransactionEntity> {
+        return paymentTransactionRepository.findByMerchantId(merchantId).filter { it.type == Type.RequestRefund }
+    }
+
+    fun getCustomerRefunds(customerId: String): List<PaymentTransactionEntity>{
+        return paymentTransactionRepository.findByCustomerId(customerId).filter { it.type == Type.FinalizeRefund }
+    }
+
+    fun getMerchantRefunds(merchantId: String): List<PaymentTransactionEntity>{
+        return paymentTransactionRepository.findByMerchantId(merchantId).filter { it.type == Type.FinalizeRefund }
     }
 }
