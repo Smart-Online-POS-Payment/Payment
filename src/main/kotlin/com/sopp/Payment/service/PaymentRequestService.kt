@@ -1,6 +1,7 @@
 package com.sopp.Payment.service
 
 import com.sopp.Payment.entity.PaymentTransactionEntity
+import com.sopp.Payment.model.PaymentRequestModel
 import com.sopp.Payment.model.PaymentTransactionModel
 import com.sopp.Payment.repository.PaymentTransactionRepository
 import org.springframework.stereotype.Service
@@ -11,8 +12,8 @@ class PaymentRequestService(
     private var paymentTransactionRepository: PaymentTransactionRepository
     ) {
 
-    suspend fun createPaymentRequest(paymentTransactionModel: PaymentTransactionModel): UUID {
-        var paymentTransactionEntity = PaymentTransactionEntity(paymentTransactionModel)
+    suspend fun createPaymentRequest(paymentRequestModel: PaymentRequestModel): UUID {
+        var paymentTransactionEntity = PaymentTransactionEntity(paymentRequestModel)
         return paymentTransactionRepository.save(paymentTransactionEntity).id
     }
 

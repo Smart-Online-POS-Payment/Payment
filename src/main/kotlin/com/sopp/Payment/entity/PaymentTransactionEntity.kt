@@ -1,5 +1,6 @@
 package com.sopp.Payment.entity
 
+import com.sopp.Payment.model.PaymentRequestModel
 import com.sopp.Payment.model.PaymentTransactionModel
 import com.sopp.Payment.model.PaymentTransactionModel.Type
 import jakarta.persistence.*
@@ -27,7 +28,7 @@ data class PaymentTransactionEntity(
     var reference: UUID?
 ) {
     constructor() : this(UUID.randomUUID(), "", null,BigDecimal.ZERO, PaymentTransactionModel.Category.Other, PaymentTransactionModel.Type.RequestSale, null, null, null)
-    constructor(paymentTransactionModel: PaymentTransactionModel): this(UUID.randomUUID(), paymentTransactionModel.merchantId, paymentTransactionModel.customerId, paymentTransactionModel.paymentAmount, paymentTransactionModel.category, paymentTransactionModel.type, paymentTransactionModel.paymentMessage, null, null)
+    constructor(paymentRequestModel: PaymentRequestModel): this(UUID.randomUUID(), paymentRequestModel.merchantId, null, paymentRequestModel.paymentAmount, paymentRequestModel.category, Type.RequestRefund, paymentRequestModel.paymentMessage, null, null)
 
     constructor(paymentTransactionEntity: PaymentTransactionEntity, reference: UUID?): this(UUID.randomUUID(), paymentTransactionEntity.merchantId, paymentTransactionEntity.customerId, paymentTransactionEntity.paymentAmount, paymentTransactionEntity.category, Type.RequestRefund, paymentTransactionEntity.paymentMessage, Date.from(Instant.now()), reference)
 }

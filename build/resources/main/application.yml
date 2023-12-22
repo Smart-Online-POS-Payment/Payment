@@ -27,10 +27,10 @@ spring:
             value:
               delegate: org.apache.kafka.common.serialization.StringDeserializer
 database:
-  endpoint: localhost:5432
-  name: sopp
-  user: db_user
-  password: db_pass
+  endpoint: 34.28.23.25:5432
+  name: postgres
+  user: postgres
+  password: KP^FOz63OneNl{dH
 server:
   port: 8083
 firebase:

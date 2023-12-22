@@ -27,7 +27,7 @@ class PaymentOrderController(
     }
 
     @GetMapping("/merchant/{merchantId}")
-    suspend fun getPaymentsOfMerchant(@PathVariable merchantId: String): List<PaymentTransactionEntity> {
+    suspend fun getPaymentsOfMerchant(@PathVariable merchantId: String): List<PaymentModel> {
         return paymentOrderService.getPaymentsOfMerchant(merchantId)
     }
 }

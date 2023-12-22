@@ -1,6 +1,8 @@
 package com.sopp.Payment.controller
 
 import com.sopp.Payment.entity.PaymentTransactionEntity
+import com.sopp.Payment.model.PaymentModel
+import com.sopp.Payment.model.PaymentRequestModel
 import com.sopp.Payment.model.PaymentTransactionModel
 import com.sopp.Payment.service.PaymentRequestService
 import org.springframework.web.bind.annotation.*
@@ -14,8 +16,8 @@ class PaymentRequestController(
 ) {
 
     @PostMapping
-    suspend fun createPaymentRequest(@RequestBody paymentTransactionModel: PaymentTransactionModel): UUID? {
-        return paymentRequestService.createPaymentRequest(paymentTransactionModel)
+    suspend fun createPaymentRequest(@RequestBody paymentRequestModel: PaymentRequestModel): UUID? {
+        return paymentRequestService.createPaymentRequest(paymentRequestModel)
     }
 
     @DeleteMapping("{merchantId}/cancel/{uuid}")
@@ -29,7 +31,8 @@ class PaymentRequestController(
     }
 
     @GetMapping("{uuid}/customer/{customerId}")
-    suspend fun getPaymentRequestDetail(@PathVariable uuid: UUID, @PathVariable customerId: String): PaymentTransactionEntity {
-        return paymentRequestService.getPaymentRequestDetail(uuid)
+    suspend fun getPaymentRequestDetail(@PathVariable uuid: UUID, @PathVariable customerId: String): PaymentModel {
+        println("Entered...")
+        return PaymentModel(paymentRequestService.getPaymentRequestDetail(uuid))
     }
 }

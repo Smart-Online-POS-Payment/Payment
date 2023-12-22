@@ -43,10 +43,14 @@ class PaymentOrderService(
             .map { PaymentModel(it) }
     }
 
-    suspend fun getPaymentsOfMerchant(merchantId: String): List<PaymentTransactionEntity> {
-        val payments = paymentTransactionRepository.findByMerchantId(merchantId)
+    suspend fun getPaymentsOfMerchant(merchantId: String): List<PaymentModel> {
+        val payments = getPaymentTransaction(merchantId)
         return payments
             .filter { it.type == Type.FinalizeSale }
+            .map { PaymentModel(it) }
+    }
+    suspend fun getPaymentTransaction(merchantId: String): List<PaymentTransactionEntity> {
+        return paymentTransactionRepository.findByMerchantId(merchantId)
     }
 
 }
