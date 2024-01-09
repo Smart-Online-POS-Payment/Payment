@@ -11,21 +11,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  kafka:
-    producer:
-      bootstrap-servers: localhost:29092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
-    consumer:
-      bootstrap-servers: localhost:29092
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      properties:
-        spring:
-          deserializer:
-            value:
-              delegate: org.apache.kafka.common.serialization.StringDeserializer
 database:
   endpoint: 34.28.23.25:5432
   name: postgres

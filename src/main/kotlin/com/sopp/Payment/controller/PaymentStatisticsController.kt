@@ -1,5 +1,6 @@
 package com.sopp.Payment.controller
 
+import com.sopp.Payment.model.StatsModel
 import com.sopp.Payment.service.StatisticsService
 import org.springframework.web.bind.annotation.*
 
@@ -11,13 +12,14 @@ class PaymentStatisticsController(
 ) {
 
     @GetMapping("/expenses/customer/{customerId}/category")
-    suspend fun getCustomerExpensesPerCategory(@PathVariable customerId: String, @RequestBody interval: Int = 7): MutableMap<String, Double> {
-        return statisticsService.calculateCategoricalExpenseRates(customerId, interval)
+    suspend fun getCustomerExpensesPerCategory(@PathVariable customerId: String): MutableMap<String, Double> {
+        print("Kaan")
+        return statisticsService.calculateCategoricalExpenseRates(customerId, 500)
     }
 
     @GetMapping("/income/merchant/{merchantId}/category")
-    suspend fun getMerchantIncomePerCategory(@PathVariable merchantId: String, @RequestBody interval: Int = 7): MutableMap<String, Double> {
-        return statisticsService.calculateCategoricalIncomeRates(merchantId, interval)
+    suspend fun getMerchantIncomePerCategory(@PathVariable merchantId: String): List<StatsModel> {
+        return statisticsService.calculateCategoricalIncomeRates(merchantId, 500)
     }
 
     @GetMapping("/merchant/{merchantId}/unique-customer")

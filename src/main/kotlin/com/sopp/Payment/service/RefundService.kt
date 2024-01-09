@@ -1,7 +1,9 @@
 package com.sopp.Payment.service
 
 import com.sopp.Payment.entity.PaymentTransactionEntity
+import com.sopp.Payment.model.PaymentModel
 import com.sopp.Payment.model.PaymentTransactionModel.Type
+import com.sopp.Payment.model.RefundModel
 import com.sopp.Payment.model.ResponseModel
 import com.sopp.Payment.repository.PaymentTransactionRepository
 import org.springframework.http.HttpStatus
@@ -82,8 +84,10 @@ class RefundService(
         return paymentTransactionRepository.findByCustomerId(customerId).filter { it.type == Type.RequestRefund }
     }
 
-    fun getMerchantRefundRequests(merchantId: String): List<PaymentTransactionEntity> {
-        return paymentTransactionRepository.findByMerchantId(merchantId).filter { it.type == Type.RequestRefund }
+    fun getMerchantRefundRequests(merchantId: String): List<RefundModel> {
+        return paymentTransactionRepository.findMerchantRefundRequests(merchantId).map {
+            RefundModel(it)
+        }
     }
 
     fun getCustomerRefunds(customerId: String): List<PaymentTransactionEntity>{

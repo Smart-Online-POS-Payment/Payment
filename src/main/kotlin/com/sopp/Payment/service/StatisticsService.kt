@@ -1,5 +1,6 @@
 package com.sopp.Payment.service
 
+import com.sopp.Payment.model.StatsModel
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.util.*
@@ -13,7 +14,7 @@ class StatisticsService(
         val currentDate = Date.from(Instant.now())
         val payments = paymentOrderService.getPaymentsOfUser(customerId)
             .filter { payment ->
-                val dayDifference = (currentDate.time - payment.date.time) / 60
+                val dayDifference = (currentDate.time - payment.date.time) / (60*60*60*24)
                 dayDifference.toInt() <= interval
             }
         val paymentDictionary = mutableMapOf<String, Double>()
@@ -38,24 +39,23 @@ class StatisticsService(
         return weeklyPayment
     }
 
-    suspend fun calculateCategoricalIncomeRates(merchantId: String, interval: Int): MutableMap<String, Double> {
+    suspend fun calculateCategoricalIncomeRates(merchantId: String, interval: Int): List<StatsModel> {
         val currentDate = Date.from(Instant.now())
 
-        val payments = paymentOrderService.getPaymentTransaction(merchantId)
+        val payments = paymentOrderService.getPaymentsOfMerchant(merchantId)
             .filter {
-                val dayDifference = (currentDate.time - it.paymentDate!!.time) / 60
+                val dayDifference = (currentDate.time - it.date!!.time) / (60*60*60*24)
                 dayDifference.toInt() <= interval
             }
 
         val paymentDictionary = mutableMapOf<String, Double>()
         payments.forEach { payment ->
             val category = payment.category.toString()
-            val amount = payment.paymentAmount.toDouble()
+            val amount = payment.amount.toDouble()
             paymentDictionary[category] = paymentDictionary[category] ?: 0.0
             paymentDictionary[category] = paymentDictionary[category]!! + amount
         }
-
-        return paymentDictionary
+        return paymentDictionary.map { (category, amount) -> StatsModel(amount, category) }
     }
 
     suspend fun weeklyCustomerAmount(merchantId: String): Int {

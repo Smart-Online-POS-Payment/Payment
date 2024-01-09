@@ -1,19 +1,19 @@
 package com.sopp.Payment.service
 
-import com.sopp.Payment.config.producer.KafkaProducer
 import com.sopp.Payment.entity.PaymentTransactionEntity
 import com.sopp.Payment.model.PaymentModel
 import com.sopp.Payment.model.PaymentTransactionModel.Type
 import com.sopp.Payment.model.ResponseModel
 import com.sopp.Payment.repository.PaymentTransactionRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class PaymentOrderService(
     private val paymentTransactionRepository: PaymentTransactionRepository,
-    private val walletService: WalletService,
-    private val kafkaProducer: KafkaProducer
+    private val walletService: WalletService
 ) {
     suspend fun createPaymentOrder(uuid: UUID, customerId: String): ResponseModel {
         val paymentRequest = paymentTransactionRepository.findById(uuid).get()
@@ -24,7 +24,7 @@ class PaymentOrderService(
                 paymentRequest.type = Type.FinalizeSale
                 paymentRequest.customerId = customerId
                 val payment = paymentTransactionRepository.save(paymentRequest)
-                kafkaProducer.sendStringMessage(payment)
+                //kafkaProducer.sendStringMessage(payment)
                 ResponseModel("200", "Successfull payment")
             } else{
                 ResponseModel("500", "Internal error")
@@ -36,21 +36,26 @@ class PaymentOrderService(
     }
 
     suspend fun getPaymentsOfUser(customerId: String): List<PaymentModel> {
-        val payments = paymentTransactionRepository.findByCustomerId(customerId)
+        val payments = withContext(Dispatchers.IO) {
+            paymentTransactionRepository.findFinalizeSalePaymentsByCustomerId(customerId)
+        }
 
         return payments
-            .filter { it.type == Type.FinalizeSale }
             .map { PaymentModel(it) }
     }
 
     suspend fun getPaymentsOfMerchant(merchantId: String): List<PaymentModel> {
-        val payments = getPaymentTransaction(merchantId)
-        return payments
-            .filter { it.type == Type.FinalizeSale }
-            .map { PaymentModel(it) }
+        val payments = withContext(Dispatchers.IO) {
+            paymentTransactionRepository.findFinalizeSalePaymentsByMerchantId(merchantId)
+        }
+        return payments.map {
+            PaymentModel(it)
+        }
     }
     suspend fun getPaymentTransaction(merchantId: String): List<PaymentTransactionEntity> {
-        return paymentTransactionRepository.findByMerchantId(merchantId)
+        return withContext(Dispatchers.IO) {
+            paymentTransactionRepository.findByMerchantId(merchantId)
+        }
     }
 
 }

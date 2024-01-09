@@ -1,6 +1,8 @@
 package com.sopp.Payment.controller
 
 import com.sopp.Payment.entity.PaymentTransactionEntity
+import com.sopp.Payment.model.PaymentModel
+import com.sopp.Payment.model.RefundModel
 import com.sopp.Payment.service.RefundService
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -28,7 +30,7 @@ class RefundController(
     }
 
     @GetMapping("request/merchant/{merchantId}")
-    fun getMerchantRefundRequests(@PathVariable merchantId: String): List<PaymentTransactionEntity> {
+    fun getMerchantRefundRequests(@PathVariable merchantId: String): List<RefundModel> {
         return refundService.getMerchantRefundRequests(merchantId)
     }
 
