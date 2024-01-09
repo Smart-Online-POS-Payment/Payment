@@ -13,4 +13,9 @@ class WebClientConfig(
     fun walletWebClient(@Value("\${sopp.server.wallet.url}") baseUrl: String): WebClient {
         return clientBuilder.baseUrl(baseUrl).build()
     }
+
+    @Bean("notificationWebClient")
+    fun notificationWebClient(@Value("\${sopp.server.wallet.url}") baseUrl: String): WebClient {
+        return clientBuilder.baseUrl(baseUrl).build()
+    }
 }

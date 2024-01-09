@@ -25,3 +25,5 @@ sopp:
   server:
     wallet:
       url: http://localhost:8082
+    notification:
+      url: http://localhost:8085
