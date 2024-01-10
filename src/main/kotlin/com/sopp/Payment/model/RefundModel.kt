@@ -11,8 +11,14 @@ data class RefundModel(
     val customerId: String?,
     val amount: BigDecimal,
     @Enumerated(EnumType.STRING)
-    val category: PaymentTransactionModel.Category
-){
-    constructor(paymentTransactionEntity: PaymentTransactionEntity): this(paymentTransactionEntity.id, paymentTransactionEntity.customerId, paymentTransactionEntity.paymentAmount, paymentTransactionEntity.category)
+    val category: PaymentTransactionModel.Category,
+) {
+    constructor(
+        paymentTransactionEntity: PaymentTransactionEntity,
+    ) : this(
+        paymentTransactionEntity.id,
+        paymentTransactionEntity.customerId,
+        paymentTransactionEntity.paymentAmount,
+        paymentTransactionEntity.category,
+    )
 }
-

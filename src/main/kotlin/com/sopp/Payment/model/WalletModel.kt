@@ -6,5 +6,5 @@ import java.util.*
 data class WalletModel(
     val id: UUID,
     val customerId: String,
-    val balance: BigDecimal
+    val balance: BigDecimal,
 )

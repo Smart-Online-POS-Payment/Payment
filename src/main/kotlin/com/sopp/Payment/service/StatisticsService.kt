@@ -7,16 +7,19 @@ import java.util.*
 
 @Service
 class StatisticsService(
-    private val paymentOrderService: PaymentOrderService
+    private val paymentOrderService: PaymentOrderService,
 ) {
-
-    suspend fun calculateCategoricalExpenseRates(customerId: String, interval: Int): MutableMap<String, Double> {
+    suspend fun calculateCategoricalExpenseRates(
+        customerId: String,
+        interval: Int,
+    ): MutableMap<String, Double> {
         val currentDate = Date.from(Instant.now())
-        val payments = paymentOrderService.getPaymentsOfUser(customerId)
-            .filter { payment ->
-                val dayDifference = (currentDate.time - payment.date.time) / (60*60*60*24)
-                dayDifference.toInt() <= interval
-            }
+        val payments =
+            paymentOrderService.getPaymentsOfUser(customerId)
+                .filter { payment ->
+                    val dayDifference = (currentDate.time - payment.date.time) / (60 * 60 * 60 * 24)
+                    dayDifference.toInt() <= interval
+                }
         val paymentDictionary = mutableMapOf<String, Double>()
         payments.forEach { payment ->
             val category = payment.category.toString()
@@ -27,26 +30,33 @@ class StatisticsService(
         return paymentDictionary
     }
 
-    suspend fun calculateIncomeAtInterval(merchantId: String, interval: Int): Double {
+    suspend fun calculateIncomeAtInterval(
+        merchantId: String,
+        interval: Int,
+    ): Double {
         val currentDate = Date.from(Instant.now())
         var weeklyPayment = 0.0
         paymentOrderService.getPaymentTransaction(merchantId).filter {
             val dayDifference = (currentDate.time - it.paymentDate!!.time) / 60
             dayDifference.toInt() <= interval
-        }.forEach{
+        }.forEach {
             weeklyPayment += it.paymentAmount.toDouble()
         }
         return weeklyPayment
     }
 
-    suspend fun calculateCategoricalIncomeRates(merchantId: String, interval: Int): List<StatsModel> {
+    suspend fun calculateCategoricalIncomeRates(
+        merchantId: String,
+        interval: Int,
+    ): List<StatsModel> {
         val currentDate = Date.from(Instant.now())
 
-        val payments = paymentOrderService.getPaymentsOfMerchant(merchantId)
-            .filter {
-                val dayDifference = (currentDate.time - it.date!!.time) / (60*60*60*24)
-                dayDifference.toInt() <= interval
-            }
+        val payments =
+            paymentOrderService.getPaymentsOfMerchant(merchantId)
+                .filter {
+                    val dayDifference = (currentDate.time - it.date.time) / (60 * 60 * 60 * 24)
+                    dayDifference.toInt() <= interval
+                }
 
         val paymentDictionary = mutableMapOf<String, Double>()
         payments.forEach { payment ->

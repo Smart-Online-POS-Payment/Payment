@@ -10,9 +10,12 @@ import java.math.BigDecimal
 @Service
 class NotificationClient(
     @Qualifier("notificationWebClient")
-    val client: WebClient
+    val client: WebClient,
 ) {
-    suspend fun postPaymentOrder(customerId: String, amount: BigDecimal) {
+    suspend fun postPaymentOrder(
+        customerId: String,
+        amount: BigDecimal,
+    ) {
         return client
             .post()
             .uri("wallet/{customerId}/amount/{amount}", customerId, amount)
@@ -20,11 +23,16 @@ class NotificationClient(
             .awaitBody()
     }
 
-    suspend fun postRefundRequest(merchantId: String, amount: BigDecimal){
-
+    suspend fun postRefundRequest(
+        merchantId: String,
+        amount: BigDecimal,
+    ) {
     }
 
-    suspend fun postRefundOrder(merchantId: String, amount: BigDecimal): ResponseModel {
+    suspend fun postRefundOrder(
+        merchantId: String,
+        amount: BigDecimal,
+    ): ResponseModel {
         return client
             .put()
             .uri("wallet/$merchantId/amount/$amount")

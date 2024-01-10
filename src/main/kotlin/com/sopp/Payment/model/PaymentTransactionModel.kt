@@ -12,13 +12,13 @@ data class PaymentTransactionModel(
     var category: Category,
     @Enumerated(EnumType.STRING)
     val type: Type,
-    var paymentMessage: String?
-){
+    var paymentMessage: String?,
+) {
     enum class Type {
         RequestSale,
         FinalizeSale,
         RequestRefund,
-        FinalizeRefund
+        FinalizeRefund,
     }
 
     enum class Category {
@@ -32,6 +32,6 @@ data class PaymentTransactionModel(
         Charity,
         Rent,
         Gaming,
-        Other
+        Other,
     }
 }

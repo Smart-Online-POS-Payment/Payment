@@ -12,10 +12,10 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 database:
-  endpoint: 34.28.23.25:5432
-  name: postgres
-  user: postgres
-  password: KP^FOz63OneNl{dH
+  endpoint: ${ENDPOINT}
+  name: ${NAME}
+  user: ${USER}
+  password: ${PASSWORD}
 server:
   port: 8083
 firebase:
@@ -24,6 +24,6 @@ firebase:
 sopp:
   server:
     wallet:
-      url: http://localhost:8082
+      url: ${WALLET_URL}
     notification:
-      url: http://localhost:8085
+      url: ${NOTIFICATION_URL}

@@ -10,17 +10,23 @@ import java.math.BigDecimal
 @Service
 class WalletClient(
     @Qualifier("walletWebClient")
-    val client: WebClient
+    val client: WebClient,
 ) {
-    suspend fun withdrawMoney(customerId: String, amount: BigDecimal): ResponseModel {
+    suspend fun withdrawMoney(
+        customerId: String,
+        amount: BigDecimal,
+    ): ResponseModel {
         return client
             .delete()
-            .uri("wallet/{customerId}/amount/{amount}",customerId, amount)
+            .uri("wallet/{customerId}/amount/{amount}", customerId, amount)
             .retrieve()
             .awaitBody()
     }
 
-    suspend fun addMoney(merchantId: String, amount: BigDecimal): ResponseModel{
+    suspend fun addMoney(
+        merchantId: String,
+        amount: BigDecimal,
+    ): ResponseModel {
         return client
             .put()
             .uri("wallet/$merchantId/amount/$amount")

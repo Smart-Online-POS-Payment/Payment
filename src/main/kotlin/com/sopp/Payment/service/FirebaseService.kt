@@ -6,16 +6,18 @@ import org.springframework.stereotype.Service
 
 @Service
 class FirebaseService(
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
 ) {
-
-    fun validateUserToken(token: String, userId: String): Boolean {
+    fun validateUserToken(
+        token: String,
+        userId: String,
+    ): Boolean {
         return try {
             val decodedToken = firebaseAuth.verifyIdToken(extractBearerToken(token))
             println(decodedToken)
             println(decodedToken.uid)
             userId == decodedToken.uid
-        }catch (e: FirebaseException){
+        } catch (e: FirebaseException) {
             println(e)
             false
         }
