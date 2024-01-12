@@ -36,27 +36,17 @@ class StatisticsService(
     ): Double {
         val currentDate = Date.from(Instant.now())
         var weeklyPayment = 0.0
-        paymentOrderService.getPaymentTransaction(merchantId).filter {
-            val dayDifference = (currentDate.time - it.paymentDate!!.time) / 60
-            dayDifference.toInt() <= interval
-        }.forEach {
+        paymentOrderService.getPaymentTransaction(merchantId).forEach {
             weeklyPayment += it.paymentAmount.toDouble()
         }
         return weeklyPayment
     }
 
     suspend fun calculateCategoricalIncomeRates(
-        merchantId: String,
-        interval: Int,
+        merchantId: String
     ): List<StatsModel> {
-        val currentDate = Date.from(Instant.now())
-
         val payments =
             paymentOrderService.getPaymentsOfMerchant(merchantId)
-                .filter {
-                    val dayDifference = (currentDate.time - it.date.time) / (60 * 60 * 60 * 24)
-                    dayDifference.toInt() <= interval
-                }
 
         val paymentDictionary = mutableMapOf<String, Double>()
         payments.forEach { payment ->

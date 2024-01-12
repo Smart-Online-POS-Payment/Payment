@@ -39,7 +39,6 @@ class PaymentRequestController(
         @PathVariable uuid: UUID,
         @PathVariable customerId: String,
     ): PaymentModel {
-        println("Entered...")
         return PaymentModel(paymentRequestService.getPaymentRequestDetail(uuid))
     }
 }

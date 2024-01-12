@@ -5,10 +5,12 @@ import com.sopp.Payment.model.PaymentTransactionModel.Type
 import com.sopp.Payment.model.RefundModel
 import com.sopp.Payment.model.ResponseModel
 import com.sopp.Payment.repository.PaymentTransactionRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import java.util.UUID
+import java.util.*
 
 @Service
 class RefundService(
@@ -51,7 +53,9 @@ class RefundService(
     }
 
     suspend fun completeRefund(id: UUID): ResponseModel {
-        val payment = paymentTransactionRepository.findById(id)
+        val payment = withContext(Dispatchers.IO) {
+            paymentTransactionRepository.findById(id)
+        }
 
         if (payment.isPresent) {
             val paymentEntity = payment.get()

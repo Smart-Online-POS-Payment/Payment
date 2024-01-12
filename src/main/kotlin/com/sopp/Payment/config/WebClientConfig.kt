@@ -13,7 +13,7 @@ class WebClientConfig(
     fun walletWebClient(
         @Value("\${sopp.server.wallet.url}") baseUrl: String,
     ): WebClient {
-        return clientBuilder.baseUrl(baseUrl).build()
+        return clientBuilder.baseUrl("http://34.122.25.144").build()
     }
 
     @Bean("notificationWebClient")

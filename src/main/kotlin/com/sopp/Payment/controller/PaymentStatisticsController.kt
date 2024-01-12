@@ -22,7 +22,7 @@ class PaymentStatisticsController(
     suspend fun getMerchantIncomePerCategory(
         @PathVariable merchantId: String,
     ): List<StatsModel> {
-        return statisticsService.calculateCategoricalIncomeRates(merchantId, 500)
+        return statisticsService.calculateCategoricalIncomeRates(merchantId)
     }
 
     @GetMapping("/merchant/{merchantId}/unique-customer")
